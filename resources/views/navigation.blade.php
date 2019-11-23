@@ -12,19 +12,32 @@
 
 <ul class="list-reset mb-8">
     @foreach ($resources as $label => $resource)
-        @if (! $resource::$displayInNavigation)
-            @continue
-        @endif
 
-        <li class="leading-wide mb-4 text-sm">
-            <router-link :to="{
+        @if(\Illuminate\Support\Str::startsWith($resource, 'http'))
+
+            <li class="leading-wide mb-4 text-sm">
+                <a href="{{ $resource }}" class="text-white ml-8 no-underline dim">
+                    {{ $label }}
+                </a>
+            </li>
+
+        @else
+
+            @if (! $resource::$displayInNavigation)
+                @continue
+            @endif
+
+            <li class="leading-wide mb-4 text-sm">
+                <router-link :to="{
                     name: 'index',
                     params: {
                         resourceName: '{{ $resource::uriKey() }}'
                     }
                 }" class="text-white ml-8 no-underline dim">
-                {{ is_string($label) ? $label : $resource::label() }}
-            </router-link>
-        </li>
+                    {{ is_string($label) ? $label : $resource::label() }}
+                </router-link>
+            </li>
+
+        @endif
     @endforeach
 </ul>
